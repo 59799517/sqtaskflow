@@ -48,7 +48,7 @@ public class AppTest
         Task<String> stringTask = new Task<>("1task");
         TaskConfig taskConfig = new TaskConfig();
         taskConfig.setSecond(10);
-//        stringTask.setTaskConfig(taskConfig);
+        stringTask.setTaskConfig(taskConfig);
         stringTask.setAction(()->{
             stringTask.setCommunicationInformation("实时通讯信息"+new Date());
             List<TaskLog> taskLogs = stringTask.getTaskLogs();
@@ -87,7 +87,6 @@ public class AppTest
         tasks.add(stringTask2);
         //执行任务
         TaskExcuteHanderConfig taskExcuteHanderConfig = new TaskExcuteHanderConfig(5,10,100);
-
         TaskExcuteHander<String> stringTaskExcuteHander = new TaskExcuteHander<>(taskExcuteHanderConfig);
         //启动任务
         stringTaskExcuteHander.start(tasks);
@@ -100,7 +99,7 @@ public class AppTest
             return "任务4结果";
         });
         //添加并立即执行（也会遵循taskConfig配置）
-        stringTaskExcuteHander.addTaskAndExecute(stringTask4);
+        stringTaskExcuteHander.start(stringTask4);
         for (int i = 0; i < 10; i++) {
             Task<String> stringTask5 = new Task<>("task----"+i);
 //            stringTask5.setTaskConfig(taskConfig);
@@ -112,13 +111,12 @@ public class AppTest
                 return "任务4结果";
             });
             //添加并立即执行（也会遵循taskConfig配置）
-            stringTaskExcuteHander.addTaskAndExecute(stringTask5);
+            stringTaskExcuteHander.start(stringTask5);
         }
 
 
-        boolean sss = true;
         //循环查看任务结果
-        while (sss){
+        while (true){
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -132,22 +130,22 @@ public class AppTest
             System.out.println("已完成任务个数"+stringTaskExcuteHander.getTaskOverSize());
             System.out.println("正在运行任务个数"+stringTaskExcuteHander.getRunningTasKSize());
             System.out.println("====================================");
-//            for (Task<String> task : tasks) {
-//                TaskStatus status = task.getStatus();
-//                System.out.println(task.getTaskNmae()+":当前任务状态："+status.getValue());
-//                System.out.println(task.getTaskNmae()+"任务实时信息："+task.getCommunicationInformation());
-//                List<TaskLog> taskLogs = task.getTaskLogs();
-//                for (TaskLog taskLog : taskLogs) {
-//                    System.out.println(task.getTaskNmae()+"任务日志："+taskLog.getLog());
-//                }
-//                if (status.equals(TaskStatus.SUCCESS)||status.equals(TaskStatus.FAIL)) {
-//                    System.out.println("============执行完毕===================");
-//                    System.out.println("============执行结果"+task.getTaskNmae()+"::"+task.getResult()+"===================");
-//                }
-//            }
+            for (Task<String> task : tasks) {
+                TaskStatus status = task.getStatus();
+                System.out.println(task.getTaskNmae()+":当前任务状态："+status.getValue());
+                System.out.println(task.getTaskNmae()+"任务实时信息："+task.getCommunicationInformation());
+                List<TaskLog> taskLogs = task.getTaskLogs();
+                for (TaskLog taskLog : taskLogs) {
+                    System.out.println(task.getTaskNmae()+"任务日志："+taskLog.getLog());
+                }
+                if (status.equals(TaskStatus.SUCCESS)||status.equals(TaskStatus.ERROR)) {
+                    System.out.println("============执行完毕===================");
+                    System.out.println("============执行结果"+task.getTaskNmae()+"::"+task.getResult()+"===================");
+                }
+            }
 
             if (stringTaskExcuteHander.getTaskSize().intValue()==stringTaskExcuteHander.getTaskOverSize().intValue()){
-                sss=false;
+               break;
             }
         }
     }

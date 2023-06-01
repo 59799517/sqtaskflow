@@ -63,7 +63,7 @@ public class TaskExcuteHander <T>{
      * @param task
      * @return
      */
-    public Boolean addTaskAndExecute(Task<T> task){
+    public Boolean start(Task<T> task){
         Task<T> tTask = Objects.requireNonNull(task);
         boolean add = tasks.add(tTask);
         if (add){
