@@ -85,11 +85,11 @@ public class AppTest
         ArrayList<Task<String>> tasks = new ArrayList<>();
         tasks.add(stringTask);
         tasks.add(stringTask2);
-        //执行任务
+        //创建任务执行器
         TaskExcuteHanderConfig taskExcuteHanderConfig = new TaskExcuteHanderConfig(5,10,100);
-        TaskExcuteHander<String> stringTaskExcuteHander = new TaskExcuteHander<>(taskExcuteHanderConfig);
+        TaskExcuteHander<String> taskExcuteHander = new TaskExcuteHander<>(taskExcuteHanderConfig);
         //启动任务
-        stringTaskExcuteHander.start(tasks);
+        taskExcuteHander.start(tasks);
         //在执行中添加任务
         Task<String> stringTask4 = new Task<>("4task");
         stringTask4.setAction(()->{
@@ -99,7 +99,7 @@ public class AppTest
             return "任务4结果";
         });
         //添加并立即执行（也会遵循taskConfig配置）
-        stringTaskExcuteHander.start(stringTask4);
+        taskExcuteHander.start(stringTask4);
         for (int i = 0; i < 10; i++) {
             Task<String> stringTask5 = new Task<>("task----"+i);
 //            stringTask5.setTaskConfig(taskConfig);
@@ -111,7 +111,7 @@ public class AppTest
                 return "任务4结果";
             });
             //添加并立即执行（也会遵循taskConfig配置）
-            stringTaskExcuteHander.start(stringTask5);
+            taskExcuteHander.start(stringTask5);
         }
 
 
@@ -126,9 +126,9 @@ public class AppTest
                 break;
             }
             System.out.println("====================================");
-            System.out.println("总任务个数"+stringTaskExcuteHander.getTaskSize());
-            System.out.println("已完成任务个数"+stringTaskExcuteHander.getTaskOverSize());
-            System.out.println("正在运行任务个数"+stringTaskExcuteHander.getRunningTasKSize());
+            System.out.println("总任务个数"+taskExcuteHander.getTaskSize());
+            System.out.println("已完成任务个数"+taskExcuteHander.getTaskOverSize());
+            System.out.println("正在运行任务个数"+taskExcuteHander.getRunningTasKSize());
             System.out.println("====================================");
             for (Task<String> task : tasks) {
                 TaskStatus status = task.getStatus();
@@ -144,7 +144,7 @@ public class AppTest
                 }
             }
 
-            if (stringTaskExcuteHander.getTaskSize().intValue()==stringTaskExcuteHander.getTaskOverSize().intValue()){
+            if (taskExcuteHander.getTaskSize().intValue()==taskExcuteHander.getTaskOverSize().intValue()){
                break;
             }
         }
